@@ -64,7 +64,8 @@ function showGoods(data) {
     }
 
     document.onclick = function(e){
-        console.log(e.target.attributes.data.nodeValue);
+        console.log();
+        if (e.target.attributes.name != undefined) {
         if (e.target.attributes.name.nodeValue == 'add-to-cart'){
             addToCart(e.target.attributes.data.nodeValue);
         }
@@ -90,7 +91,31 @@ function showGoods(data) {
             showCart();
             localStorage.setItem('cart', JSON.stringify(cart));
             console.log(cart);
+             }
+        else if(e.target.attributes.name.nodeValue == 'buy'){
+                    var data = {
+                    name : document.getElementById('customer-name').value,
+                    email : document.getElementById('customer-email').value,
+                    phone : document.getElementById('customer-phone').value,
+                    cart : cart
+                };
+                fetch("php_mail/mail.php",
+                {
+                    method: "POST",
+                    body: JSON.stringify(data)
+                })
+                .then(function(res){ 
+                    console.log(res);
+                    if (res){
+                        alert('Ваш заказ отправлен');
+                    }
+                    else {
+                        alert('Ошибка заказа');
+                    }
+                 })
+             }
         }
+        return false;
     }
 
     function addToCart(elem) {
